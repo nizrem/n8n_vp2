@@ -20,5 +20,5 @@ sh <(curl -fsSL https://raw.githubusercontent.com/nizrem/n8n_vp2/refs/heads/main
 sh <(curl -fsSL https://raw.githubusercontent.com/nizrem/n8n_vp2/refs/heads/main/n8n_restore.sh)
 
 # 8. Миграция
-sh <(curl -fsSL https://raw.githubusercontent.com/nizrem/n8n_vp/refs/heads/main/n8n_migrate.sh)
+sh <(curl -fsSL https://raw.githubusercontent.com/nizrem/n8n_vp2/refs/heads/main/n8n_migrate.sh)
 # Ответьте: no → скрипт покажет инструкции
