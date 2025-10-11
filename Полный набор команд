@@ -1,0 +1,20 @@
+# 1. Установка
+curl -fsSL https://raw.githubusercontent.com/nizrem/n8n_vp2/refs/heads/main/n8n_install.sh | bash
+
+# 2. Ngrok
+sh <(curl -fsSL https://raw.githubusercontent.com/nizrem/n8n_vp2/refs/heads/main/n8n_ngrok.sh)
+
+# 3. Проверка статуса
+sh <(curl -fsSL https://raw.githubusercontent.com/nizrem/n8n_vp2/refs/heads/main/n8n_status.sh)
+
+# 4. Логи
+sh <(curl -fsSL https://raw.githubusercontent.com/nizrem/n8n_vp2/refs/heads/main/n8n_logs.sh)
+
+# 5. Обновление
+sh <(curl -fsSL https://raw.githubusercontent.com/nizrem/n8n_vp2/refs/heads/main/n8n_update.sh)
+
+# 6. Бэкап
+sh <(curl -fsSL https://raw.githubusercontent.com/nizrem/n8n_vp2/refs/heads/main/n8n_backup.sh)
+
+# 7. Восстановление
+sh <(curl -fsSL https://raw.githubusercontent.com/nizrem/n8n_vp2/refs/heads/main/n8n_restore.sh)
