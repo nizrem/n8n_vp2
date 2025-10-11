@@ -1,0 +1,25 @@
+# 1. Проверьте что есть бэкап
+ls -lh ~/n8n_backups/
+
+# 2. Перейдите в домашнюю папку
+cd ~
+
+# 3. Инициализируйте Git
+git init
+git config user.email "nizrem@gmail.com"
+git config user.name "nizrem"
+
+# 4. Добавьте бэкап
+git add n8n_backups/
+
+# 5. Сделайте commit
+git commit -m "Add n8n backup"
+
+# 6. Переименуйте ветку в main
+git branch -M main
+
+# 7. Добавьте remote на ВАШ репо
+git remote add origin https://github.com/nizrem/n8n_vp2.git
+
+# 8. Загрузьте на GitHub
+git push -u origin main
