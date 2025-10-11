@@ -1,0 +1,56 @@
+#!/bin/bash
+
+echo "🔄 Restoring n8n from backup..."
+
+BACKUP_DIR="$HOME/n8n_backups"
+
+# List available backups
+echo "📂 Available backups:"
+ls -lh "$BACKUP_DIR" 2>/dev/null || {
+    echo "❌ No backups found in $BACKUP_DIR"
+    exit 1
+}
+
+echo ""
+read -p "Enter backup filename (e.g., n8n_backup_20250101_120000.tar.gz): " BACKUP_FILE
+
+BACKUP_PATH="$BACKUP_DIR/$BACKUP_FILE"
+
+if [ ! -f "$BACKUP_PATH" ]; then
+    echo "❌ Backup file not found: $BACKUP_PATH"
+    exit 1
+fi
+
+# Stop n8n
+echo "🛑 Stopping n8n container..."
+cd ~
+sudo docker compose down
+
+# Remove current data
+echo "🗑️  Removing current n8n data..."
+sudo rm -rf ~/n8n_data
+
+# Extract backup
+echo "📥 Extracting backup..."
+sudo tar xzf "$BACKUP_PATH" -C "$HOME"
+
+if [ $? -eq 0 ]; then
+    echo "✅ Backup restored successfully!"
+    
+    # Fix permissions
+    sudo chown -R 1000:1000 ~/n8n_data
+    sudo chmod -R 755 ~/n8n_data
+    
+    # Start n8n
+    echo "🚀 Starting n8n container..."
+    sudo docker compose up -d
+    
+    echo "⏳ Waiting for n8n to start..."
+    sleep 10
+    
+    echo "✅ n8n restored and started!"
+    echo "📍 Access at: https://provaccine-parliamentary-nisha.ngrok-free.dev"
+else
+    echo "❌ Restore failed!"
+    exit 1
+fi
