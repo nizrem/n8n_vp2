@@ -22,3 +22,12 @@ sh <(curl -fsSL https://raw.githubusercontent.com/nizrem/n8n_vp2/refs/heads/main
 # 8. Миграция
 sh <(curl -fsSL https://raw.githubusercontent.com/nizrem/n8n_vp2/refs/heads/main/n8n_migrate.sh)
 # Ответьте: no → скрипт покажет инструкции
+
+# Обновление n8n (теперь сохранит ngrok домен)
+sh <(curl -fsSL https://raw.githubusercontent.com/nizrem/n8n_vp2/refs/heads/main/n8n_update.sh)
+
+# Восстановление из бэкапа (с правильным ngrok доменом)
+sh <(curl -fsSL https://raw.githubusercontent.com/nizrem/n8n_vp2/refs/heads/main/n8n_restore.sh)
+
+# Альтернативное восстановление с ngrok доменом
+sh <(curl -fsSL https://raw.githubusercontent.com/nizrem/n8n_vp2/refs/heads/main/n8n_restore_with_ngrok.sh)
