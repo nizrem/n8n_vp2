@@ -78,9 +78,41 @@ sleep 10
 N8N_VERSION=$(sudo docker exec n8n_container n8n --version 2>/dev/null || echo "unknown")
 echo "✅ n8n version: $N8N_VERSION"
 
+# Wait for container to fully start
+echo "⏳ Waiting for n8n to fully initialize (20 seconds)..."
+sleep 20
+
+# Check ngrok status
+echo ""
+echo "🔍 Checking ngrok status..."
+if pgrep -x ngrok > /dev/null; then
+    echo "✅ Ngrok is running"
+    
+    # Verify ngrok is on correct port
+    echo "🔧 Verifying ngrok configuration..."
+    NGROK_LOG=$(curl -s http://localhost:4040/api/tunnels 2>/dev/null | grep -o "http://localhost:[0-9]*" || echo "")
+    
+    if [ -z "$NGROK_LOG" ]; then
+        echo "⚠️  Ngrok may not be on correct port (5678)"
+        echo "Restarting ngrok..."
+        pkill -9 ngrok
+        sleep 2
+        nohup ngrok http 5678 --url=https://provaccine-parliamentary-nisha.ngrok-free.dev > /tmp/ngrok.log 2>&1 &
+        sleep 5
+        echo "✅ Ngrok restarted"
+    fi
+else
+    echo "❌ Ngrok is NOT running!"
+    echo "🚀 Starting ngrok..."
+    nohup ngrok http 5678 --url=https://provaccine-parliamentary-nisha.ngrok-free.dev > /tmp/ngrok.log 2>&1 &
+    sleep 5
+    echo "✅ Ngrok started"
+fi
+
 echo ""
 echo "🎉 Update complete!"
 echo "📍 Access n8n at: https://provaccine-parliamentary-nisha.ngrok-free.dev"
+echo "🔐 OAuth URL: https://provaccine-parliamentary-nisha.ngrok-free.dev/rest/oauth2-credential/callback"
 echo "💾 Backup location: ~/n8n_data_backup"
 echo ""
 echo "ℹ️  To restore from backup if needed:"
