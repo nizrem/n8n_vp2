@@ -31,3 +31,17 @@ sh <(curl -fsSL https://raw.githubusercontent.com/nizrem/n8n_vp2/refs/heads/main
 
 # Альтернативное восстановление с ngrok доменом
 sh <(curl -fsSL https://raw.githubusercontent.com/nizrem/n8n_vp2/refs/heads/main/n8n_restore_with_ngrok.sh)
+
+📋 Решение:
+Если после апдейта появляется ошибка ERR_NGROK_8012:
+bashsh <(curl -fsSL https://raw.githubusercontent.com/nizrem/n8n_vp2/refs/heads/main/n8n_fix_ngrok.sh)
+Или вручную:
+bashpkill -9 ngrok
+sleep 2
+nohup ngrok http 5678 --url=https://provaccine-parliamentary-nisha.ngrok-free.dev > /tmp/ngrok.log 2>&1 &
+✅ Обновленный процесс:
+bash# Обновление
+sh <(curl -fsSL https://raw.githubusercontent.com/nizrem/n8n_vp2/refs/heads/main/n8n_update.sh)
+
+# Теперь скрипт автоматически проверит ngrok и исправит если нужно!
+Если всё равно есть проблемы - используйте n8n_fix_ngrok.sh
