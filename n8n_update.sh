@@ -33,39 +33,6 @@ sudo docker pull n8nio/n8n:latest
 echo "🔨 Rebuilding custom image with latest n8n and ffmpeg..."
 sudo docker compose build --no-cache
 
-# Ensure compose.yaml has correct environment variables
-echo "🔧 Updating compose.yaml with ngrok domain..."
-NGROK_DOMAIN="provaccine-parliamentary-nisha.ngrok-free.dev"
-
-# Update or create compose.yaml with correct settings
-cat > ~/compose.yaml << 'EOF'
-version: "3.9"
-services:
-  n8n:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: always
-    container_name: n8n_container
-    environment:
-      - GENERIC_TIMEZONE=Europe/Tallinn
-      - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_BASIC_AUTH_USER=admin
-      - N8N_BASIC_AUTH_PASSWORD=admin
-      - WEBHOOK_URL=https://provaccine-parliamentary-nisha.ngrok-free.dev/
-      - N8N_EDITOR_BASE_URL=https://provaccine-parliamentary-nisha.ngrok-free.dev/
-      - WEBHOOK_TUNNEL_URL=https://provaccine-parliamentary-nisha.ngrok-free.dev/
-      - N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
-      - N8N_SECURE_COOKIE=false
-      - N8N_DEFAULT_BINARY_DATA_MODE=filesystem
-    ports:
-      - "5678:5678"
-    volumes:
-      - ~/n8n_data:/home/node/.n8n
-EOF
-
-echo "✅ compose.yaml updated with ngrok domain"
-
 # Start containers
 echo "🚀 Starting n8n container..."
 sudo docker compose up -d
