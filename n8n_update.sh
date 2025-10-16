@@ -35,9 +35,6 @@ sudo docker compose build --no-cache
 
 # Ensure compose.yaml has correct environment variables
 echo "🔧 Updating compose.yaml with ngrok domain..."
-NGROK_DOMAIN="provaccine-parliamentary-nisha.ngrok-free.dev"
-
-# Update or create compose.yaml with correct settings
 cat > ~/compose.yaml << 'EOF'
 version: "3.9"
 services:
@@ -72,41 +69,37 @@ sudo docker compose up -d
 
 # Wait for container to start
 echo "⏳ Waiting for container to start..."
-sleep 10
+sleep 15
 
 # Get n8n version
 N8N_VERSION=$(sudo docker exec n8n_container n8n --version 2>/dev/null || echo "unknown")
 echo "✅ n8n version: $N8N_VERSION"
 
-# Wait for container to fully start
-echo "⏳ Waiting for n8n to fully initialize (20 seconds)..."
-sleep 20
-
-# Check ngrok status
+# Check and fix ngrok
 echo ""
 echo "🔍 Checking ngrok status..."
 if pgrep -x ngrok > /dev/null; then
     echo "✅ Ngrok is running"
     
     # Verify ngrok is on correct port
-    echo "🔧 Verifying ngrok configuration..."
-    NGROK_LOG=$(curl -s http://localhost:4040/api/tunnels 2>/dev/null | grep -o "http://localhost:[0-9]*" || echo "")
+    echo "🔧 Verifying ngrok port..."
+    NGROK_API=$(curl -s http://localhost:4040/api/tunnels 2>/dev/null)
     
-    if [ -z "$NGROK_LOG" ]; then
-        echo "⚠️  Ngrok may not be on correct port (5678)"
-        echo "Restarting ngrok..."
+    if echo "$NGROK_API" | grep -q "localhost:5678"; then
+        echo "✅ Ngrok is correctly configured on port 5678"
+    else
+        echo "⚠️  Ngrok is on wrong port - fixing..."
         pkill -9 ngrok
         sleep 2
         nohup ngrok http 5678 --url=https://provaccine-parliamentary-nisha.ngrok-free.dev > /tmp/ngrok.log 2>&1 &
         sleep 5
-        echo "✅ Ngrok restarted"
+        echo "✅ Ngrok restarted on port 5678"
     fi
 else
-    echo "❌ Ngrok is NOT running!"
-    echo "🚀 Starting ngrok..."
+    echo "⚠️  Ngrok is NOT running - starting..."
     nohup ngrok http 5678 --url=https://provaccine-parliamentary-nisha.ngrok-free.dev > /tmp/ngrok.log 2>&1 &
     sleep 5
-    echo "✅ Ngrok started"
+    echo "✅ Ngrok started on port 5678"
 fi
 
 echo ""
