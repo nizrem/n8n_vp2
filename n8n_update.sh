@@ -29,6 +29,10 @@ sudo docker compose down
 echo "📥 Pulling latest n8n image..."
 sudo docker pull n8nio/n8n:latest
 
+# Rebuild image with latest n8n and ffmpeg
+echo "🔨 Rebuilding custom image with latest n8n and ffmpeg..."
+sudo docker compose build --no-cache
+
 # Start containers
 echo "🚀 Starting n8n container..."
 sudo docker compose up -d
