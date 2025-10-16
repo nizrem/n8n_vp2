@@ -25,6 +25,23 @@ echo "✅ Backup created at ~/n8n_data_backup"
 echo "🛑 Stopping n8n container..."
 sudo docker compose down
 
+# Force remove any remaining n8n containers
+echo "🧹 Cleaning up old containers..."
+OLD_CONTAINERS=$(sudo docker ps -a | grep n8n | awk '{print $1}')
+if [ ! -z "$OLD_CONTAINERS" ]; then
+    echo "Removing old n8n containers..."
+    sudo docker rm -f $OLD_CONTAINERS
+fi
+
+# Check if port 5678 is free
+echo "🔍 Checking port 5678..."
+PORT_CHECK=$(sudo lsof -i :5678 2>/dev/null)
+if [ ! -z "$PORT_CHECK" ]; then
+    echo "⚠️  Port 5678 is still in use, freeing it..."
+    sudo fuser -k 5678/tcp
+    sleep 2
+fi
+
 # Pull latest n8n image
 echo "📥 Pulling latest n8n image..."
 sudo docker pull n8nio/n8n:latest
